@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Expense - Smart Expense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="app-navbar">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <a class="brand" href="{{ url_for('index') }}"><span class="brand-badge">₹</span> Smart Expense</a>
+        <div class="d-flex flex-wrap gap-1">
+            <a class="nav-link-custom" href="{{ url_for('index') }}">Home</a>
+            <a class="nav-link-custom active" href="{{ url_for('add_expense') }}">Add Expense</a>
+            <a class="nav-link-custom" href="{{ url_for('dashboard') }}">Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <div class="card">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="mb-1">Add Expense</h2>
+                    <p class="text-muted mb-4">Describe what you spent on. The AI does the rest.</p>
+
+                    <form method="POST" action="{{ url_for('add_expense') }}">
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control form-control-lg" id="description"
+                                   name="description" placeholder="e.g. Lunch at KFC"
+                                   autocomplete="off" required>
+
+                            <!-- Always visible: shows spell check + category while typing -->
+                            <div id="aiPanel" class="ai-panel">
+                                <div id="aiPanelBody">
+                                    <span class="label">🤖 AI Assistant:</span>
+                                    start typing a description to see the spell check and category.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="amount" class="form-label">Amount (₹)</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control form-control-lg"
+                                   id="amount" name="amount" placeholder="e.g. 350" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control form-control-lg" id="date"
+                                   name="date" value="{{ today }}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Add Expense</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Live AI assistant: spell check + predicted category while typing
+    var descInput = document.getElementById('description');
+    var panel = document.getElementById('aiPanel');
+    var panelBody = document.getElementById('aiPanelBody');
+    var checkUrl = "{{ url_for('spellcheck') }}";
+    var timer = null;
+    var latestRequest = 0;
+
+    var IDLE_TEXT = ' start typing a description to see the spell check and category.';
+
+    function newLine(labelText) {
+        var line = document.createElement('div');
+        var label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = labelText + ' ';
+        line.appendChild(label);
+        return line;
+    }
+
+    function showIdle() {
+        panel.classList.remove('error');
+        panelBody.textContent = '';
+        var line = newLine('🤖 AI Assistant:');
+        line.appendChild(document.createTextNode(IDLE_TEXT.trim()));
+        panelBody.appendChild(line);
+    }
+
+    function showError() {
+        panel.classList.add('error');
+        panelBody.textContent =
+            'Could not reach the spell-check service. Make sure the app is running ' +
+            '(python app.py) and refresh this page.';
+    }
+
+    function showResult(data) {
+        panel.classList.remove('error');
+        panelBody.textContent = '';
+
+        var spell = newLine('✏️ Spell check:');
+        if (data.corrections.length) {
+            data.corrections.forEach(function (c, i) {
+                if (i > 0) { spell.appendChild(document.createTextNode(', ')); }
+                var oldWord = document.createElement('span');
+                oldWord.className = 'fix-old';
+                oldWord.textContent = c.wrong;
+                var newWord = document.createElement('span');
+                newWord.className = 'fix-new';
+                newWord.textContent = c.right;
+                spell.appendChild(oldWord);
+                spell.appendChild(document.createTextNode(' → '));
+                spell.appendChild(newWord);
+            });
+        } else {
+            spell.appendChild(document.createTextNode('no spelling problems found'));
+        }
+        panelBody.appendChild(spell);
+
+        var cat = newLine('🏷️ AI category:');
+        cat.appendChild(document.createTextNode(data.category));
+        panelBody.appendChild(cat);
+    }
+
+    descInput.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            var text = descInput.value.trim();
+            if (!text) { showIdle(); return; }
+
+            var myRequest = ++latestRequest;
+            fetch(checkUrl + '?text=' + encodeURIComponent(text))
+                .then(function (res) {
+                    if (!res.ok) { throw new Error('bad response'); }
+                    return res.json();
+                })
+                .then(function (data) {
+                    if (myRequest === latestRequest) { showResult(data); }
+                })
+                .catch(function () {
+                    if (myRequest === latestRequest) { showError(); }
+                });
+        }, 250);
+    });
+</script>
+
+</body>
+</html>

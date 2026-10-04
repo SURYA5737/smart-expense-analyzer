@@ -1,0 +1,359 @@
+/* ------------------------------------------------------------
+   Smart Expense - light, professional theme
+   ------------------------------------------------------------ */
+:root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-soft: #eaf1ff;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --radius: 16px;
+    --shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 6px 20px rgba(16, 24, 40, 0.06);
+}
+
+html {
+    font-size: 17px;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand:hover {
+    color: var(--text);
+}
+
+.brand-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: var(--primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.nav-link-custom {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+}
+
+.nav-link-custom:hover,
+.nav-link-custom.active {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.65rem 1.4rem;
+}
+
+.btn-lg {
+    font-size: 1.15rem;
+    padding: 0.85rem 1.8rem;
+}
+
+.btn-sm {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.9rem;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary-dark);
+    --bs-btn-hover-border-color: var(--primary-dark);
+    --bs-btn-active-bg: var(--primary-dark);
+    --bs-btn-active-border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary);
+    --bs-btn-hover-border-color: var(--primary);
+}
+
+/* ---------- Cards ---------- */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* ---------- Home page ---------- */
+.hero {
+    padding: 4.5rem 0 3rem;
+    text-align: center;
+}
+
+.hero-eyebrow {
+    display: inline-block;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+}
+
+.hero h1 {
+    font-size: 3.4rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.hero .lead {
+    font-size: 1.35rem;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 1.25rem auto 2rem;
+}
+
+.feature-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-card .card-text {
+    font-size: 1.05rem;
+    color: var(--muted);
+}
+
+.icon-circle {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: var(--primary-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+}
+
+.chip {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    margin: 0.25rem;
+}
+
+.section-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ---------- Forms ---------- */
+.form-label {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+}
+
+.ai-panel {
+    background: var(--primary-soft);
+    border: 1px solid #cfe0ff;
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    margin-top: 0.8rem;
+    font-size: 1.02rem;
+}
+
+.ai-panel .label {
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.ai-panel.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.fix-old {
+    text-decoration: line-through;
+    color: var(--danger);
+}
+
+.fix-new {
+    font-weight: 700;
+    color: var(--success);
+}
+
+/* ---------- Dashboard ---------- */
+.stat-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.cat-name {
+    font-weight: 600;
+}
+
+.cat-amount {
+    font-weight: 700;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 999px;
+    background: #eef2f7;
+}
+
+.progress-bar {
+    background: var(--primary);
+    border-radius: 999px;
+}
+
+.insight-box {
+    background: var(--primary-soft);
+    border-left: 4px solid var(--primary);
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+    border-radius: 10px;
+    font-size: 1.03rem;
+}
+
+.alert {
+    font-size: 1.03rem;
+    border-radius: 12px;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.table {
+    font-size: 1rem;
+}
+
+.table thead th {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+}
+
+.table td {
+    padding: 0.9rem 0.75rem;
+    vertical-align: middle;
+}
+
+.badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.45em 0.75em;
+}
+
+.spell-note {
+    font-size: 0.9rem;
+    color: var(--primary-dark);
+}
+
+.footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 2.5rem 0 2rem;
+}
+
+@media (max-width: 576px) {
+    .hero h1 {
+        font-size: 2.4rem;
+    }
+}
