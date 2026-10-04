@@ -242,16 +242,6 @@ h1, h2, h3, h4, h5 {
     color: #991b1b;
 }
 
-.fix-old {
-    text-decoration: line-through;
-    color: var(--danger);
-}
-
-.fix-new {
-    font-weight: 700;
-    color: var(--success);
-}
-
 /* ---------- Dashboard ---------- */
 .stat-label {
     font-size: 0.95rem;
@@ -338,11 +328,6 @@ details summary {
     font-size: 0.85rem;
     font-weight: 600;
     padding: 0.45em 0.75em;
-}
-
-.spell-note {
-    font-size: 0.9rem;
-    color: var(--primary-dark);
 }
 
 .footer {

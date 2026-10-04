@@ -3,7 +3,6 @@ from flask import (
 )
 import sqlite3
 import re
-from difflib import get_close_matches
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -78,33 +77,8 @@ CATEGORY_KEYWORDS = {
 }
 
 
-# ===============================================================
-# AI TECHNIQUE: SPELL CHECKING  (Syllabus Unit V - NLP)
-# Corrects typos in the description using the system vocabulary
-# (closest word by similarity) before the category is predicted.
-# ===============================================================
-ALL_WORDS = {
-    w for kws in CATEGORY_KEYWORDS.values() for kw in kws for w in kw.split()
-}
-VOCABULARY = sorted(w for w in ALL_WORDS if len(w) >= 4)
-
-
-def spell_check(description):
-    """Return (corrected_text, [(wrong_word, corrected_word), ...])."""
-    corrected_words = []
-    corrections = []
-    for word in re.findall(r"[a-z0-9\-']+", description.lower()):
-        if word.isalpha() and len(word) >= 4 and word not in ALL_WORDS:
-            match = get_close_matches(word, VOCABULARY, n=1, cutoff=0.8)
-            if match:
-                corrections.append((word, match[0]))
-                word = match[0]
-        corrected_words.append(word)
-    return " ".join(corrected_words), corrections
-
-
 # ---------------------------------------------------------------
-# AUTOMATIC CATEGORIZATION (keyword scoring on the corrected text)
+# AUTOMATIC CATEGORIZATION (keyword scoring on the description)
 # ---------------------------------------------------------------
 def predict_category(text):
     text = text.lower()
@@ -323,8 +297,7 @@ def add_expense():
             flash("Please enter a valid amount greater than 0.", "danger")
             return redirect(url_for("add_expense"))
 
-        corrected_text, corrections = spell_check(description)
-        category = predict_category(corrected_text)
+        category = predict_category(description)
         unusual = is_unusual(category, amount)
 
         conn = get_db()
@@ -336,9 +309,6 @@ def add_expense():
         conn.commit()
         conn.close()
 
-        if corrections:
-            fixes = ", ".join(f"'{w}' -> '{r}'" for w, r in corrections)
-            flash(f"Spell check: {fixes}", "info")
         flash(
             f"Expense added! AI Category: {category} (Rs. {amount:,.0f})",
             "success",
@@ -355,20 +325,13 @@ def add_expense():
     return render_template("add_expense.html", today=today)
 
 
-@app.route("/spellcheck")
-def spellcheck():
-    """Used by the Add Expense page to show a live spell-check preview."""
+@app.route("/predict")
+def predict():
+    """Used by the Add Expense page to show a live category preview."""
     text = request.args.get("text", "").strip()
     if not text:
-        return jsonify({"corrected": "", "corrections": [], "category": ""})
-    corrected, corrections = spell_check(text)
-    return jsonify(
-        {
-            "corrected": corrected,
-            "corrections": [{"wrong": w, "right": r} for w, r in corrections],
-            "category": predict_category(corrected),
-        }
-    )
+        return jsonify({"category": ""})
+    return jsonify({"category": predict_category(text)})
 
 
 @app.route("/dashboard")
@@ -455,17 +418,9 @@ def dashboard():
         for r in fired_rules
     ]
 
-    # Spell-check note for each expense (shown under the description)
-    expenses_view = []
-    for e in expenses:
-        item = dict(e)
-        _, fixes = spell_check(e["description"])
-        item["fixes"] = fixes
-        expenses_view.append(item)
-
     return render_template(
         "dashboard.html",
-        expenses=expenses_view,
+        expenses=expenses,
         total=total,
         expense_count=len(expenses),
         top_category=category_rows[0]["category"] if category_rows else "-",

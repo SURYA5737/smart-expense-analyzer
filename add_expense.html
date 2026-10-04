@@ -42,11 +42,11 @@
                                    name="description" placeholder="e.g. Lunch at KFC"
                                    autocomplete="off" required>
 
-                            <!-- Always visible: shows spell check + category while typing -->
+                            <!-- Always visible: shows the predicted category while typing -->
                             <div id="aiPanel" class="ai-panel">
                                 <div id="aiPanelBody">
                                     <span class="label">🤖 AI Assistant:</span>
-                                    start typing a description to see the spell check and category.
+                                    start typing a description to see the category.
                                 </div>
                             </div>
                         </div>
@@ -73,15 +73,15 @@
 </div>
 
 <script>
-    // Live AI assistant: spell check + predicted category while typing
+    // Live AI assistant: predicted category while typing
     var descInput = document.getElementById('description');
     var panel = document.getElementById('aiPanel');
     var panelBody = document.getElementById('aiPanelBody');
-    var checkUrl = "{{ url_for('spellcheck') }}";
+    var checkUrl = "{{ url_for('predict') }}";
     var timer = null;
     var latestRequest = 0;
 
-    var IDLE_TEXT = ' start typing a description to see the spell check and category.';
+    var IDLE_TEXT = ' start typing a description to see the category.';
 
     function newLine(labelText) {
         var line = document.createElement('div');
@@ -103,32 +103,13 @@
     function showError() {
         panel.classList.add('error');
         panelBody.textContent =
-            'Could not reach the spell-check service. Make sure the app is running ' +
+            'Could not reach the category service. Make sure the app is running ' +
             '(python app.py) and refresh this page.';
     }
 
     function showResult(data) {
         panel.classList.remove('error');
         panelBody.textContent = '';
-
-        var spell = newLine('✏️ Spell check:');
-        if (data.corrections.length) {
-            data.corrections.forEach(function (c, i) {
-                if (i > 0) { spell.appendChild(document.createTextNode(', ')); }
-                var oldWord = document.createElement('span');
-                oldWord.className = 'fix-old';
-                oldWord.textContent = c.wrong;
-                var newWord = document.createElement('span');
-                newWord.className = 'fix-new';
-                newWord.textContent = c.right;
-                spell.appendChild(oldWord);
-                spell.appendChild(document.createTextNode(' → '));
-                spell.appendChild(newWord);
-            });
-        } else {
-            spell.appendChild(document.createTextNode('no spelling problems found'));
-        }
-        panelBody.appendChild(spell);
 
         var cat = newLine('🏷️ AI category:');
         cat.appendChild(document.createTextNode(data.category));

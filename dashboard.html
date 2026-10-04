@@ -196,11 +196,6 @@
                             <td>{{ loop.index }}</td>
                             <td>
                                 {{ e['description'] }}
-                                {% if e['fixes'] %}
-                                    <div class="spell-note">✏️ Spell check:
-                                        {% for w, r in e['fixes'] %}{{ w }} → {{ r }}{% if not loop.last %}, {% endif %}{% endfor %}
-                                    </div>
-                                {% endif %}
                             </td>
                             <td>₹{{ "{:,.0f}".format(e['amount']) }}</td>
                             <td>{{ e['date'] }}</td>

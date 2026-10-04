@@ -6,7 +6,7 @@ A simple expense tracker web app with AI-style features, built with Flask and SQ
 
 - **Add expenses** with description, amount and date
 - **Automatic categorization** (Food, Shopping, Transport, Bills, Healthcare, Entertainment, Education)
-- **Spell checking** of the description before categorizing, with a live preview while typing
+- **Live category preview** while typing the description
 - **Unusual expense detection** (an amount more than 2.5x the category average is flagged)
 - **Expert system advice** using IF-THEN rules and forward chaining, with a "how did the system decide?" trace
 - **Dashboard** with total spending, category totals, a doughnut chart and spending insights
@@ -17,7 +17,6 @@ A simple expense tracker web app with AI-style features, built with Flask and SQ
 |---|---|
 | Knowledge representation | Category keywords and advice rules (`CATEGORY_KEYWORDS`, `RULES`, `ADVICE` in `app.py`) |
 | Forward chaining (expert system) | `build_facts()` and `forward_chain()` produce spending advice from rules |
-| Spell checking (NLP) | `spell_check()` corrects typos before the category is predicted |
 
 ## Tech Stack
 
@@ -62,5 +61,5 @@ Then open http://127.0.0.1:5000 in your browser.
 
 1. Add `bought shirt` for 500, 800, 700 and 600 (category: Shopping).
 2. Add `bought shoes` for 8000 to trigger the unusual expense warning and expert system advice.
-3. Add `petrl for bike` to see the spell check correct it to `petrol` (category: Transport).
+3. Add `petrol for bike` (category: Transport).
 4. Open the Dashboard and expand "How did the system decide?" to see the rules that fired.
